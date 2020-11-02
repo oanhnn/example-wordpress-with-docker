@@ -17,7 +17,6 @@ This is what each item is for:
 * `bin/` – Useful command-line scripts.
 * `data/` – MySQL dump files go here.
 * `docker/` – Files required by the Docker setup are in this directory.
-* `README.md` – Every project needs a README!
 * `docker-compose.yml` – Development orchestration config file.
 * `Dockerrun.aws.json` - Elastic Beanstalk config file.
 
@@ -71,10 +70,10 @@ This is to ensure proper review of all the code.
 
 Fork the project, create a feature branch, and send a pull request.
 
-If you would like to help take a look at the [list of issues](https://github.com/oanhnn/example-nginx-proxy-auto-ssl/issues).
+If you would like to help take a look at the [list of issues](https://github.com/oanhnn/example-wordpress-with-docker/issues).
 
 ## License
 
 This project is released under the MIT License.   
-Copyright © 2019 [Oanh Nguyen](https://github.com/oanhnn)   
-Please see [License File](https://github.com/oanhnn/example-nginx-proxy-auto-ssl/blob/master/LICENSE) for more information.
+Copyright © 2020 [Oanh Nguyen](https://github.com/oanhnn)   
+Please see [License File](https://github.com/oanhnn/example-wordpress-with-docker/blob/master/LICENSE) for more information.

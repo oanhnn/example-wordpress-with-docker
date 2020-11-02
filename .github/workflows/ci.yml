@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  # Test every Tuesday at at 8:35 AM UTC
+  schedule:
+    - cron: "35 8 * * 2"
+
+  # Test when push to main branch
+  push:
+    branches:
+      - master
+      - develop
+
+  # For all PRs to the main branch run the tests
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setting up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-buildx-
+
+      - name: Build test
+        id: docker_test
+        uses: docker/build-push-action@v2
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+          context: ./docker/wordpress
+          file: ./docker/wordpress/Dockerfile
+          pull: true
+          load: true
+          tags: wordpress_app
+
+      - name: Setup docker-compose
+        run: cp ./.env.example ./.env
+
+      - name: Run with docker
+        run: |
+          docker-compose up -d
+          sleep 15
+          docker-compose ps
+          docker-compose exec -T wp wp --info
+          curl --fail -s http://127.0.0.1/wp-admin/install.php || exit 1
+          docker-compose down

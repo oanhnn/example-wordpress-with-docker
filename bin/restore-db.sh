@@ -9,9 +9,6 @@ if [ -z "$file" ]; then
     exit 1;
 fi
 
-# Uncompressing file
-
-
 # Restore database to db container
-cmd='mysql -u"$DB_USER" -p"$DB_PASS" "$DB_NAME"'
-docker exec -i $(docker-compose ps -q db) sh -c "$cmd" < $file
+cmd='MYSQL_PWD=\$MYSQL_PASSWORD mysql -u \$MYSQL_USER \$MYSQL_DATABASE'
+docker-compose exec mysql sh -c "$cmd" < $file

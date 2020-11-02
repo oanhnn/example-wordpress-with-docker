@@ -1,4 +1,4 @@
-FROM wordpress:5.2-php7.3-fpm-alpine
+FROM wordpress:php7.4-fpm-alpine
 
 # Install xdebug and Less
 RUN set -eux; \
@@ -19,5 +19,4 @@ RUN set -eux; \
     php --version
 
 # Install WP-CLI
-RUN curl -sSL -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
- && chmod +x /usr/local/bin/wp
+COPY --from=wordpress:cli-php7.4 /usr/local/bin/wp /usr/local/bin/wp

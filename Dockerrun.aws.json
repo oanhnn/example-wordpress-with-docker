@@ -17,7 +17,7 @@
   "containerDefinitions": [
     {
       "name": "wp",
-      "image": "wordpress:5-php7.3-fpm-alpine",
+      "image": "wordpress:php7.4-fpm-alpine",
       "essential": true,
       "environment": [
         {
@@ -65,15 +65,15 @@
       "links": [
         "wp"
       ],
-      "volumesFrom": [
-        {
-          "sourceContainer": "wp"
-        }
-      ],
       "mountPoints": [
         {
+          "sourceVolume": "app-source",
+          "containerPath": "/var/www/html",
+          "readOnly": true
+        },
+        {
           "sourceVolume": "web-config",
-          "containerPath": "/etc/nginx/conf.d/default",
+          "containerPath": "/etc/nginx/templates/default.conf.template",
           "readOnly": true
         },
         {
@@ -92,7 +92,7 @@
   "localContainerDefinitions": [
     {
       "name": "db",
-      "image": "mysql:5.7",
+      "image": "mysql:8.0",
       "essential": true,
       "environment": [
         {
