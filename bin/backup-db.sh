@@ -1,16 +1,16 @@
 #!/bin/bash
 
-ROOT_DIR="$( cd `dirname $0` ; cd .. ; pwd -P )"
-source "$ROOT_DIR/.env"
+set -e
 
-file="ROOT_DIR/${1:-data/dump-$(date +%Y%m%d-%H%M%S).sql}"
+ROOT_DIR="$( cd `dirname $0` ; cd .. ; pwd -P )"
+
+file="$ROOT_DIR/${1:-data/dump-$(date +%Y%m%d-%H%M%S).sql}"
 
 # Create dump file
-cmd='MYSQL_PWD=\$MYSQL_PASSWORD mysqldump -u \$MYSQL_USER \$MYSQL_DATABASE'
-docker-compose exec mysql sh -c "$cmd" > $file
+docker-compose exec mysql sh -c "MYSQL_PWD=\$MYSQL_PASSWORD mysqldump -u \$MYSQL_USER \$MYSQL_DATABASE" > $file
 
 # Remove password warning from the file
-# sed -i '.bak' 1,1d $file && rm "$file.bak"
+sed -i "/mysqldump: Error:/d" $file
 
 # Compressing dump file
-gzip $file > $file.gz && rm "$file"
+gzip $file
