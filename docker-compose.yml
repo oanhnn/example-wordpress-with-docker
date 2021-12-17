@@ -1,18 +1,12 @@
-version: "3.5"
-
-### Networks ###
 networks:
   mysql-net: {}
   proxy-net: {}
 
-### Volumes ###
 volumes:
   mysql-vol: {}
 
-### Services ###
 services:
 
-  ### Mysql service ###
   mysql:
     image: mysql:8.0
     command:
@@ -21,9 +15,9 @@ services:
       - --collation-server=utf8mb4_unicode_ci
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpass}
-      MYSQL_USER:          ${DB_USERNAME}
-      MYSQL_PASSWORD:      ${DB_PASSWORD}
-      MYSQL_DATABASE:      ${DB_DATABASE}
+      MYSQL_USER:          ${MYSQL_USER}
+      MYSQL_PASSWORD:      ${MYSQL_PASSWORD}
+      MYSQL_DATABASE:      ${MYSQL_DATABASE}
     networks:
       - mysql-net
     # ports:
@@ -33,13 +27,12 @@ services:
       - mysql-vol:/var/lib/mysql
       # - ./initdb:/docker-entrypoint-initdb.d:ro
     healthcheck:
-      test: MYSQL_PWD=$$MYSQL_PASSWORD mysqladmin -u $$MYSQL_USER --silent ping
-      start_period: 2s
-      interval: 1s
+      test: MYSQL_PWD=$$MYSQL_PASSWORD mysqladmin -h $$HOSTNAME -P 3306 -u $$MYSQL_USER --silent ping
+      start_period: 15s
+      interval: 3s
       timeout: 3s
-      retries: 10
+      retries: 5
 
-  ### Wordpress service ###
   wp:
     image: wordpress_app
     build:
@@ -48,9 +41,9 @@ services:
     depends_on:
       - mysql
     environment:
-      WORDPRESS_DB_NAME:      ${DB_DATABASE}
-      WORDPRESS_DB_USER:      ${DB_USERNAME}
-      WORDPRESS_DB_PASSWORD:  ${DB_PASSWORD}
+      WORDPRESS_DB_NAME:      ${MYSQL_DATABASE}
+      WORDPRESS_DB_USER:      ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD:  ${MYSQL_PASSWORD}
       WORDPRESS_DB_HOST:      mysql
       WORDPRESS_DB_CHARSET:   utf8
       # WORDPRESS_DB_COLLATE:
@@ -72,7 +65,6 @@ services:
       - ./docker/wordpress/php.ini:/usr/local/etc/php/conf.d/dev.ini:ro
       - ./app:/var/www/html
 
-  ### Web service ###
   web:
     image: nginx:stable-alpine
     depends_on:
@@ -86,8 +78,8 @@ services:
       - ./docker/nginx/default.conf:/etc/nginx/templates/default.conf.template:ro
       - ./app:/var/www/html
     healthcheck:
-      test: curl --fail --silent http://127.0.0.1/_health/nginx || exit 1
-      start_period: 2s
-      interval: 1s
+      test: ["CMD", "curl", "-fs", "-o", "/dev/null", "http://localhost:80/_health/nginx"]
+      start_period: 20s
+      interval: 5s
       timeout: 3s
-      retries: 10
+      retries: 5

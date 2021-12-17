@@ -1,4 +1,4 @@
-FROM wordpress:php7.4-fpm-alpine
+FROM wordpress:php8.0-fpm-alpine
 
 # Install xdebug and Less
 RUN set -eux; \
@@ -19,4 +19,4 @@ RUN set -eux; \
     php --version
 
 # Install WP-CLI
-COPY --from=wordpress:cli-php7.4 /usr/local/bin/wp /usr/local/bin/wp
+COPY --from=wordpress:cli-php8.0 /usr/local/bin/wp /usr/local/bin/wp

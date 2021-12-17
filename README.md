@@ -4,10 +4,10 @@ An example for developing Wordpress sites with Docker and deploy to AWS Elastic 
 
 ## Requiments
 
-- Bash
+- Bash shell
 - Git
-- Docker
-- Docker Compose
+- Docker Engine 19.03.0+
+- Docker Compose 1.27.0+
 
 ## Project organisation
 
