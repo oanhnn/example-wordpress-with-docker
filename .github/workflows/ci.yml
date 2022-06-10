@@ -1,4 +1,4 @@
-name: CI
+name: Test docker image
 
 on:
   # Test every Tuesday at at 8:35 AM UTC
@@ -21,22 +21,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setting up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v2
 
       - name: Cache Docker layers
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: ${{ runner.os }}-buildx-
+          restore-keys: |
+            ${{ runner.os }}-buildx-
 
       - name: Build test
         id: docker_test
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           builder: ${{ steps.buildx.outputs.name }}
           cache-from: type=local,src=/tmp/.buildx-cache
@@ -52,9 +53,9 @@ jobs:
 
       - name: Run with docker
         run: |
-          docker-compose up -d
-          sleep 15
-          docker-compose ps
-          docker-compose exec -T wp wp --info
+          docker compose up -d
+          sleep 20
+          docker compose ps
+          docker compose exec -T wp wp --info
           curl --fail -s http://127.0.0.1/wp-admin/install.php || exit 1
-          docker-compose down
+          docker compose down

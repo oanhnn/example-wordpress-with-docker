@@ -79,7 +79,7 @@ services:
       - ./app:/var/www/html
     healthcheck:
       test: ["CMD", "curl", "-fs", "-o", "/dev/null", "http://localhost:80/_health/nginx"]
-      start_period: 20s
+      start_period: 15s
       interval: 5s
       timeout: 3s
       retries: 5
