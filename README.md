@@ -75,5 +75,5 @@ If you would like to help take a look at the [list of issues](https://github.com
 ## License
 
 This project is released under the MIT License.   
-Copyright © 2020 [Oanh Nguyen](https://github.com/oanhnn)   
+Copyright © 2022 [Oanh Nguyen](https://github.com/oanhnn)   
 Please see [License File](https://github.com/oanhnn/example-wordpress-with-docker/blob/master/LICENSE) for more information.

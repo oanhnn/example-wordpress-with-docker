@@ -17,7 +17,7 @@
   "containerDefinitions": [
     {
       "name": "wp",
-      "image": "wordpress:php7.4-fpm-alpine",
+      "image": "wordpress:php8.1-fpm-alpine",
       "essential": true,
       "environment": [
         {
