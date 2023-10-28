@@ -13,6 +13,7 @@ services:
       - mysqld
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
+    container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpass}
       MYSQL_USER:          ${MYSQL_USER}
@@ -20,21 +21,24 @@ services:
       MYSQL_DATABASE:      ${MYSQL_DATABASE}
     networks:
       - mysql-net
+    # # Mount port for dev tools
     # ports:
     #   - 3306:3306
     restart: unless-stopped
     volumes:
       - mysql-vol:/var/lib/mysql
+      # # For initial database
       # - ./initdb:/docker-entrypoint-initdb.d:ro
     healthcheck:
-      test: MYSQL_PWD=$$MYSQL_PASSWORD mysqladmin -h $$HOSTNAME -P 3306 -u $$MYSQL_USER --silent ping
+      test: ["CMD-SHELL", "MYSQL_PWD=$$MYSQL_ROOT_PASSWORD mysqladmin ping -h localhost -u root -s"]
       start_period: 15s
       interval: 3s
       timeout: 3s
       retries: 5
 
-  wp:
+  wordpress:
     image: wordpress_app
+    container_name: wordpress
     build:
       context: ./docker/wordpress
       dockerfile: Dockerfile
@@ -67,8 +71,11 @@ services:
 
   web:
     image: nginx:stable-alpine
+    container_name: web
     depends_on:
-      - wp
+      - wordpress
+    environment:
+      PHP_FPM_ENDPOINT: wordpress:9000
     networks:
       - proxy-net
     restart: unless-stopped
@@ -76,7 +83,7 @@ services:
       - 80:80
     volumes:
       - ./docker/nginx/default.conf:/etc/nginx/templates/default.conf.template:ro
-      - ./app:/var/www/html
+      - ./app:/var/www/html:ro
     healthcheck:
       test: ["CMD", "curl", "-fs", "-o", "/dev/null", "http://localhost:80/_health/nginx"]
       start_period: 15s

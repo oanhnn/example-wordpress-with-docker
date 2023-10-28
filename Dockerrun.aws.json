@@ -16,7 +16,7 @@
   ],
   "containerDefinitions": [
     {
-      "name": "wp",
+      "name": "wordpress",
       "image": "wordpress:php8.1-fpm-alpine",
       "essential": true,
       "environment": [
@@ -61,9 +61,15 @@
       "name": "web",
       "image": "nginx:stable-alpine",
       "essential": true,
+      "environment": [
+        {
+          "name": "PHP_FPM_ENDPOINT",
+          "value": "wordpress:9000"
+        }
+      ],
       "memory": 256,
       "links": [
-        "wp"
+        "wordpress"
       ],
       "mountPoints": [
         {

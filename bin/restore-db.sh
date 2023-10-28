@@ -19,4 +19,4 @@ if [[ $file == *.gz ]]; then
 fi
 
 # Restore database to db container
-docker-compose exec -T mysql sh -c "MYSQL_PWD=\$MYSQL_PASSWORD mysql -u \$MYSQL_USER \$MYSQL_DATABASE" < $file
+docker compose exec -T mysql sh -c "MYSQL_PWD=\$MYSQL_PASSWORD mysql -u \$MYSQL_USER \$MYSQL_DATABASE" < $file

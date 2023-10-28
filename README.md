@@ -6,8 +6,8 @@ An example for developing Wordpress sites with Docker and deploy to AWS Elastic 
 
 - Bash shell
 - Git
-- Docker Engine 19.03.0+
-- Docker Compose 1.27.0+
+- Docker
+- Docker Compose plugin
 
 ## Project organisation
 
@@ -17,7 +17,7 @@ This is what each item is for:
 * `bin/` – Useful command-line scripts.
 * `data/` – MySQL dump files go here.
 * `docker/` – Files required by the Docker setup are in this directory.
-* `docker-compose.yml` – Development orchestration config file.
+* `compose.yml` – Development orchestration config file.
 * `Dockerrun.aws.json` - Elastic Beanstalk config file.
 
 ## Dev
@@ -29,7 +29,7 @@ $ git clone git@github.com:oanhnn/example-wordpress-with-docker.git project_dir
 $ cd project_dir
 $ cp .env.example .env
 $ mkdir app
-$ docker-compose up -d
+$ docker compose up -d
 ```
 
 #### Backup database
