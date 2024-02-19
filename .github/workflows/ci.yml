@@ -56,6 +56,6 @@ jobs:
           docker compose up -d
           sleep 20
           docker compose ps
-          docker compose exec -T wp wp --info
+          docker compose exec -T wordpress wp --info
           curl --fail -s http://127.0.0.1/wp-admin/install.php || exit 1
           docker compose down
