@@ -42,6 +42,9 @@ services:
     build:
       context: ./docker/wordpress
       dockerfile: Dockerfile
+      args:
+        - WORDPRESS_VERSION=6
+        - PHP_VERSION=8.2
     depends_on:
       - mysql
     environment:
