@@ -3,6 +3,9 @@ ARG PHP_VERSION=8.2
 
 FROM wordpress:${WORDPRESS_VERSION}-php${PHP_VERSION}-fpm-alpine
 
+ARG WORDPRESS_VERSION
+ARG PHP_VERSION
+
 WORKDIR /var/www/html
 
 RUN set -eux; \
