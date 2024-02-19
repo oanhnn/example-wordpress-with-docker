@@ -1,10 +1,9 @@
 ARG WORDPRESS_VERSION=6
 ARG PHP_VERSION=8.2
 
-FROM wordpress:${WORDPRESS_VERSION}-php${PHP_VERSION}-fpm-alpine
+FROM wordpress:cli-php${PHP_VERSION} AS cli
 
-ARG WORDPRESS_VERSION
-ARG PHP_VERSION
+FROM wordpress:${WORDPRESS_VERSION}-php${PHP_VERSION}-fpm-alpine
 
 WORKDIR /var/www/html
 
@@ -39,4 +38,4 @@ RUN apk add --update --no-cache \
     ;
 
 # Install WP-CLI
-COPY --from=wordpress:cli-php${PHP_VERSION} /usr/local/bin/wp /usr/local/bin/wp
+COPY --from=cli /usr/local/bin/wp /usr/local/bin/wp
